@@ -1,0 +1,113 @@
+﻿<!DOCTYPE html> <!-- /* vim:set ts=2 sw=2 sts=2 tw=80 et: */ -->
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Hello World!</title>
+  <script src="./js/ffi_honji/ffi_honji_cli.js"></script>
+  <script src="./js/ffi_honji/print_r.js"></script>
+<script>
+
+  let adll1 = null;
+  let adll2 = null;
+  let adll3 = null;
+  window.onload = async function() {
+
+    await ffi_honji_reset();
+
+    const output = document.getElementById("output");
+
+    adll1 = await ffi_honji_cli(
+      "./dll/device1_32.dll",
+      {
+        "sm2cin": ["int",[]]
+        /*
+          int sm2cin() {
+            return 3;
+          }
+        */
+      }
+    );
+    output.innerHTML += `<p>xijson:${adll1.mijson}</p>`
+                      + `<p>xojson:${adll1.mojson}</p>`;
+
+    adll2 = await ffi_honji_cli(
+      "./dll/device2_32.dll",
+      {
+        "sm2cin": ["int",["int", "int", ["int",1]]]
+        /*
+          int sm2cin( int a, int b, int *sum) {
+            *sum = a + b;
+            return 0;
+          }
+        */
+      }
+    );
+    output.innerHTML += `<p>xijson:${adll2.mijson}</p>`
+                      + `<p>xojson:${adll2.mojson}</p>`;
+
+    adll3 = await ffi_honji_cli(
+      "./dll/device3_32.dll",
+      {
+        "sm2cin": ["int",[[{"a":"char", "b":"short", "c":"int"},1], ["int",1]]]
+        /*
+          typedef struct {
+            char a;
+            short b;
+            int c;
+          } TSTRUC;
+          int sm2cin( TSTRUC *s, int *sum) {
+            *sum = s->a + s->b + s->c;
+            return 0;
+          }
+        */
+      }
+    );
+    output.innerHTML += `<p>xijson:${adll3.mijson}</p>`
+                      + `<p>xojson:${adll3.mojson}</p>`;
+  };
+
+  // DLL1 の関数呼び出し
+  async function call1() {
+    const output = document.getElementById("output");
+    output.innerHTML += `<p>call1();</p>`
+    
+    const val = await adll1.ffi_call( "sm2cin");
+
+    output.innerHTML += "<p>xijson: " + JSON.stringify(adll1.mijson) + "</p>"
+      + `<p>return val: ${val}</p>`
+      + "<p>xojson: " + JSON.stringify(adll1.mojson) + "</p>";
+  }
+
+  // DLL2 の関数呼び出し
+  async function call2() {
+    const output = document.getElementById("output");
+    output.innerHTML += `<p>call2();</p>`;
+
+    const val = await adll2.ffi_call("sm2cin", 1, 2, [0]);
+
+    output.innerHTML += "<p>xijson: " + JSON.stringify(adll2.mijson) + "</p>"
+      + `<p>return val: ${val}</p>`
+      + "<p>xojson: " + JSON.stringify(adll2.mojson) + "</p>";
+  }
+
+  // DLL3 の関数呼び出し
+  async function call3() {
+    const output = document.getElementById("output");
+    output.innerHTML += `<p>call3();</p>`;
+
+    const val = await adll3.ffi_call("sm2cin",[{a:1, b: 2, c: 3}], [0]);
+
+    output.innerHTML += "<p>xijson: " + JSON.stringify(adll3.mijson) + "</p>"
+      + `<p>return val: ${val}</p>`
+      + "<p>xojson: " + JSON.stringify(adll3.mojson) + "</p>";
+  }
+</script>
+</head>
+<body>
+    <h2>ffi_honji_svr 呼び出しテスト</h2>
+    <button onclick="call1();">送信</button>
+    <button onclick="call2();">送信</button>
+    <button onclick="call3();">送信</button><br />
+    <div id="output"></div>
+</body>
+</html>

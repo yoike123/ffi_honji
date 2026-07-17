@@ -1,0 +1,12 @@
+{
+   "name": "my-electron-app",
+   "version": "1.0.0",
+   "description": "Hello World App",
+   "main": "main.js",
+   "scripts": {
+      "start": "electron ."
+   },
+   "devDependencies": {
+      "electron": "^42.5.0"
+   }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "ffi_honji_server",
+  "version": "1.0.0",
+  "main": "./index.js",
+  "bin": "./index.js",
+  "dependencies": {
+    "ffi-napi": "^4.0.3",
+    "ref-array-napi": "^1.2.2",
+    "ref-napi": "^3.0.3",
+    "ref-struct-di": "1.1.1",
+    "ref-struct-napi": "^1.1.1"
+  }
+}
