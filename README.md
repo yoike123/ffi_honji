@@ -83,10 +83,10 @@ console.log( "output arg[1]=", adll3.mojson.xotarg[1]);  // 7
 ```
 
 ### ffi-napi server setup
-(1) Download git for windows and install your pc.
-(2) Download Python3 branch from internet and install your pc.
-(3) Download from archive and Extract node-v16.xx.x-win-x86.zip to any folder.
-(4) Adjust the node v16 startup bat-file in same layer of (3).
+(1) Download git for windows and install your pc.  
+(2) Download Python3 branch from internet and install your pc.  
+(3) Download from archive and Extract node-v16.xx.x-win-x86.zip to any folder.  
+(4) Adjust the node v16 startup bat-file in same layer of (3).  
 (4-1)node16.bat
 ```bat
 chcp 65001
@@ -133,8 +133,8 @@ run.bat
 rem ffi-napi server is startup.
 ```
 
-(5) Download from archive and Extract node-v24.18.0-win-x64 to same layer of (3).
-(6) Adjust the node v24 startup bat-file in same layer of (3).
+(5) Download from archive and Extract node-v24.18.0-win-x64 to same layer of (3).  
+(6) Adjust the node v24 startup bat-file in same layer of (3).  
 (6-1)node24.bat
 ```bat
 @echo off
