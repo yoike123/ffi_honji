@@ -5,22 +5,11 @@
 (2) But In operational environments, 32-bit DLLs written in C are running stably, making them difficult to discard.  
 
 ### System Configuration Diagram
-```text
-+-----------------------------------------------+  
-|　Localhost　　　　　　　　　　　　　　　　　　|  
-|　+----------------+　HTTP +----------------+　|  
-|　| 64bit Electron |=======| ffi-napi server|　|  
-|　|　　Node v24 LTS|　JSON |　Node v16 32bit|　|  
-|　+----------------+　　　 +|------|-------|+　|  
-|　　　　　　　　　　　　　　|　　　|　　　 |　 |  
-|　　　　　　　　　　　　 +--|+　+-|-+　+-+-+　 |  
-|　　　　　　　　　　　　 +---+　+---+　+---+　 |  
-|　　　　　　　　　　　　　 32bit DLL's　　　　 |  
-+-----------------------------------------------+  
-```  
+![sysDiagram](https://github.com/user-attachments/assets/88120a95-027f-46e5-8ff0-6a8eac1c2b39)  
+
 
 ### Basic call example 1 from Electron(Client)  
-in device1_32.dll, function "sm2cin" is defined as follow:
+in device1_32.dll, function "sm2cin" is defined as follkkow:
 ```C
 __declspec(dllexport) int sm2cin() {
   return 3;
