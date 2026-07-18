@@ -29,7 +29,7 @@ __declspec(dllexport) int sm2cin() {
 
 DLL call:
 ```javascript
-adll1 = await ffi_honji_cli(
+let adll1 = await ffi_honji_cli(
               "./dll/device1_32.dll",
               {
 	              "sm2cin": ["int",[]]
@@ -50,7 +50,7 @@ __declspec(dllexport) int sm2cin(int a, int b, int* sum) {
 
 DLL call:
 ```javascript
-adll2 = await ffi_honji_cli(
+let adll2 = await ffi_honji_cli(
               "./dll/device2_32.dll",
               {
 	              "sm2cin": ["int",["int", "int", ["int",1]]]
@@ -72,7 +72,7 @@ __declspec(dllexport) int sm2cin( TSTRUC *s, int *sum) {
 
 DLL call:
 ```javascript
-adll3 = await ffi_honji_cli(
+let adll3 = await ffi_honji_cli(
               "./dll/device3_32.dll",
               {
                 "sm2cin": ["int",[{a:"char", b:"short", c:"int"},1], ["int", 1]]
