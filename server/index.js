@@ -20,6 +20,8 @@ if ( fs.existsSync(PIDFILE)) {
 
 console.log( "Server Start.");
 fs.writeFileSync( "./logs/pid.txt", "" + process.pid);
+fs.writeFileSync( "./logs/svr_kill.bat", "\r\n@echo off\r\nset CWD=%~dp0\r\ncd %CWD%\r\ntaskkill /f /pid " + process.pid + "\r\ndel pid.txt\r\n");
+
 
 const server = http.createServer((req, res) => {
 
