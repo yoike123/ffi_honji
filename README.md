@@ -52,7 +52,7 @@ console.log( "output arg[2]=", adll2.mojson.xotarg[2]);  // 3
 ### Basic call example 3 from Electron(Client)  
 in device3_32.dll, function "sm2cin" is defined as follow:
 ```C
-typedef struct { a:char; b:short; c:int; } TSTRUC;
+typedef struct { char a, short b, int c } TSTRUC;
 __declspec(dllexport) int sm2cin( TSTRUC *s, int *sum) {
   *sum = s->a + s->b + s->c;
   return 0;
