@@ -13,39 +13,38 @@ if %errorlevel% equ 0 (
   )
   if "%NODE_MAJOR_VERSION%"=="16" (
     set TARGET=node.exe
-    start /b node.exe index.js
+    node.exe index.js
   ) else (
     set TARGET=%APP_TOP%node16.bat
-    start /b call %APP_TOP%node16.bat index.js
+    call %APP_TOP%node16.bat index.js
   )
 ) else (
   set TARGET=%APP_TOP%node16.bat
-  start /b call %APP_TOP%node16.bat index.js
+  call %APP_TOP%node16.bat index.js
 )
-rem 10秒待つ
-rem timeout /t 10 > NUL
 
 :LOOP
 
 rem 監視間隔（秒）の設定（ここでは５秒）
-timeout /t 5 > NUL
+powershell -Command "Start-Sleep -Seconds 5"
 
 rem pid.txtファイルがある限り監視を続ける
-if exist %CWD%logs\pid.txt (
+if exist %CWD%logs\pid.txt goto EXIST_PID
 
-  rem pid.txtの中身を取得(serverのプロセスID)
-  set /p line=   < %CWD%logs\pid.txt >NUL 2>&1
-  set /p line=   < %CWD%logs\pid.txt
-  echo 読み込んだテキスト：%line%
+rem PIDファイルがない場合、死活監視も任務を終える
+exit /b 0
 
-  rem tasklistから指定PIDを検索し、存在すれば errorlevelが０になる
-  tasklist /FI "PID eq %line%" | findstr /I "pid" > NUL
+:EXIST_PID
 
-  if %errorlevel% equ 0 goto LOOP
+rem pid.txtの中身を取得(serverのプロセスID)
+set /p line=   < %CWD%logs\pid.txt
+echo PID:%line%
 
-  rem サーバーが落ちているとき、起動する
-  goto START
-)
+rem tasklistから指定PIDを検索し、存在すれば errorlevelが０になる
+tasklist /FI "PID eq %line%" | findstr /I "pid" > NUL
 
-rem pid.txtが存在しないとき、本プログラムも任務を終える
-exit
+if %errorlevel% equ 0 goto LOOP
+
+rem サーバーが落ちているとき、起動する
+goto START
+

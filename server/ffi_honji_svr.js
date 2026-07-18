@@ -56,7 +56,7 @@ class THONJI {
         xmesag = "JSON parse error.";
         break;
       case 2:
-        xmesag = "Member letiable not found.";
+        xmesag = "Member variable not found.";
         break;
       case 3:
         xmesag = "DLL function define parse error.";
@@ -213,13 +213,31 @@ class THONJI {
       return JSON.stringify( xojson);
     }
 
-    this.mdllnm[this.mdllct] = xdllnm;              // dllファイル名退避
-    this.mfuncs[this.mdllct] = xfuncs;              // 関数呼び出し変換前
-    this.m_napi[this.mdllct] = xfnobj;              // 関数呼び出し変換後
+                                        // テーブルをサーチして、
+                                        //   同一DLL名があれば、そこを使う
+    let x_find = false;
+    let xindex = 0;
+    for ( xindex = 0; xindex < this.mdllct; xindex++) {
+      if ( this.mdllnm[xindex] === xdllnm) {
+        x_find = true;
+        break;
+      }
+    }
+    if ( x_find) {                      // 同一DLLファイル名がある
+      this.mfuncs[xindex] = xfuncs;   // 関数呼び出し変換前
+      this.m_napi[xindex] = xfnobj;   // 関数呼び出し変換後
+      this.mlibry[xindex] = undefined;
+    } else {
+      this.mdllnm[xindex] = xdllnm;    // dllファイル名退避
+      this.mfuncs[xindex] = xfuncs;    // 関数呼び出し変換前
+      this.m_napi[xindex] = xfnobj;    // 関数呼び出し変換後
+
+    }
+
     try {
       console.log( xdllnm);
       console.log( xfnobj);
-      this.mlibry[this.mdllct] = ffi.Library( xdllnm, xfnobj);
+      this.mlibry[xindex] = ffi.Library( xdllnm, xfnobj);
     } catch (e) {
       let xojson = {
         xcmdno: 1,
@@ -234,14 +252,17 @@ class THONJI {
       };
       return JSON.stringify( xojson);
     }
-    this.mdllct++;                             // エントリー数加算
+
+    if (!x_find) {
+      this.mdllct++;                    // エントリー数加算
+    }
 
     let xojson = {
       xcmdno: 1,
       xdllnm: xdllnm,
       xfuncs: xfuncs,
 
-      xlibno: this.mdllct,
+      xlibno: (1 + xindex),
 
       xstats: "OK",
       xerrno: 0,
