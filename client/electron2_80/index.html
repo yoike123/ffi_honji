@@ -1,0 +1,138 @@
+﻿<!DOCTYPE html> <!-- /* vim:set ts=2 sw=2 sts=2 tw=80 et: */ -->
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Hello World!</title>
+  <script src="./js/ffi_honji/ffi_honji_cli.js"></script>
+  <script src="./js/ffi_honji/print_r.js"></script>
+<script>
+
+  let adll1 = null;
+  let adll2 = null;
+  let adll3 = null;
+  window.onload = async function() {
+
+    await ffi_honji_reset();
+
+  };
+
+  // Load device1_32.dll
+  async function load1() {
+    const output = document.getElementById("output");
+
+    adll1 = await ffi_honji_cli(
+      "./dll/device1_32.dll",
+      {
+        "sm2cin": ["int",[]]
+        /*
+          int sm2cin() {
+            return 3;
+          }
+        */
+      }
+    );
+    output.innerHTML  = "<p><b>LoadLibrary: ./dll/device1_32.dll</b></p>"
+                      + "<p>xijson:" + JSON.stringify(adll1.mijson) + "</p>"
+                      + "<p>xojson:" + JSON.stringify(adll1.mojson) + "</p>";
+
+  }
+
+
+  // DLL1 の関数呼び出し
+  async function call1() {
+    const output = document.getElementById("output");
+    
+    const val = await adll1.ffi_call( "sm2cin");
+
+    output.innerHTML  = "<p></b>call sm2cin in device1_32.dll</b></p>"
+                      +"<p>xinarg: " + JSON.stringify(adll1.mijson.xinarg) + "</p>"
+                      + `<p>return val: ${val}</p>`
+                      + "<p>xotarg: " + JSON.stringify(adll1.mojson.xotarg) + "</p>";
+  }
+
+  // Load device2_32.dll
+  async function load2() {
+    const output = document.getElementById("output");
+
+    adll2 = await ffi_honji_cli(
+      "./dll/device2_32.dll",
+      {
+        "sm2cin": ["int",["int", "int", ["int",1]]]
+        /*
+          int sm2cin( int a, int b, int *sum) {
+            *sum = a + b;
+            return 0;
+          }
+        */
+      }
+    );
+    output.innerHTML  = "<p><b>LoadLibrary: ./dll/device2_32.dll</b></p>"
+                      + "<p>xijson:" + JSON.stringify(adll2.mijson) + "</p>"
+                      + "<p>xojson:" + JSON.stringify(adll2.mojson) + "</p>";
+
+  }
+
+
+  // DLL2 の関数呼び出し
+  async function call2() {
+    const output = document.getElementById("output");
+
+    const val = await adll2.ffi_call("sm2cin", 1, 2, [0]);
+
+    output.innerHTML  = "<p></b>call sm2cin in device2_32.dll</b></p>"
+                      + "<p>xinarg: " + JSON.stringify(adll2.mijson.xinarg) + "</p>"
+                      + `<p>return val: ${val}</p>`
+                      + "<p>xotarg: " + JSON.stringify(adll2.mojson.xotarg) + "</p>";
+  }
+
+  // Load device3_32.dll
+  async function load3() {
+    const output = document.getElementById("output");
+
+    adll3 = await ffi_honji_cli(
+      "./dll/device3_32.dll",
+      {
+        "sm2cin": ["int",[[{"a":"char", "b":"short", "c":"int"},1], ["int",1]]]
+        /*
+          typedef struct {
+            char a;
+            short b;
+            int c;
+          } TSTRUC;
+          int sm2cin( TSTRUC *s, int *sum) {
+            *sum = s->a + s->b + s->c;
+            return 0;
+          }
+        */
+      }
+    );
+    output.innerHTML  = "<p><b>LoadLibrary: ./dll/device3_32.dll</b></p>"
+                      + "<p>xijson:" + JSON.stringify(adll3.mijson) + "</p>"
+                      + "<p>xojson:" + JSON.stringify(adll3.mojson) + "</p>";
+  }
+
+
+  // DLL3 の関数呼び出し
+  async function call3() {
+    const output = document.getElementById("output");
+
+    const val = await adll3.ffi_call("sm2cin",[{a:1, b: 2, c: 3}], [0]);
+
+    output.innerHTML  = "<p></b>call sm2cin in device1_32.dll</b></p>"
+                      + "<p>xinarg: " + JSON.stringify(adll3.mijson.xinarg) + "</p>"
+                      + `<p>return val: ${val}</p>`
+                      + "<p>xotarg: " + JSON.stringify(adll3.mojson.xotarg) + "</p>";
+  }
+</script>
+</head>
+<body>
+    <h2>ffi_honji_svr 呼び出しテスト</h2>
+    <button onclick="load1();">(1)LoadLibrary device1_32.dll</button>
+    <button onclick="call1();">(2)call sm2cin() in device1_32.dll</button><br />
+    <button onclick="load2();">(3)LoadLibrary device2_32.dll</button>
+    <button onclick="call2();">(4)call sm2cin() in device2_32.dll</button><br />
+    <button onclick="load3();">(5)LoadLibrary device3_32.dll</button>
+    <button onclick="call3();">(6)call sm2cin() in device3_32.dll</button><br />
+    <div id="output"></div>
+</body>
+</html>
