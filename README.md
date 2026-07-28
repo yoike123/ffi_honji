@@ -1,5 +1,5 @@
 <!-- /* vim:set ts=2 sw=2 sts=2 tw=80 et: */ -->
-### Windows 64bit Electronと32bit C言語DLLの共存
+## Windows 64bit Electronと32bit C言語DLLの共存
 ### 背景
 (A)最新のNodeJS-LTSでは、32ビット版は提供されなくなった。	32ビット版の NodeJSの最終バージョンは v22 で、2026年4月でサポート期限切れ。  
 (B)近い将来、フロントエンドはAIが生成するようになる可能性があり、生成AIの実績豊富なのは、最新のLTSであると思われる。このため、フロントエンド開発は最新の64bit NodeJS LTS環境にしておきたい。  
@@ -18,11 +18,11 @@
 <hr>
 
 ### システム構成
-#### タイプ１
+#### タイプ１(serverフォルダー)
 ![sys2](https://github.com/user-attachments/assets/c960dbf0-58f2-4a81-9a17-c20e628c2a81)  
 <hr>
 
-#### タイプ２
+#### タイプ２(server_port80フォルダー)
 ![sys3](https://github.com/user-attachments/assets/83c21b37-2049-4781-9cea-d6431fb4fe5f)  
 <hr>
 
